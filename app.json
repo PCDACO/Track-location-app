@@ -42,6 +42,14 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anhden123.tracklocationapp"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "06df0056-f88c-47da-9f9e-ee09d4980af7"
+      }
     }
   }
 }
