@@ -32,7 +32,9 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ form }) => {
           )}
         />
         {form.formState.errors.email && (
-          <TextUI className="text-destructive">{form.formState.errors.email.message}</TextUI>
+          <TextUI className="text-sm text-destructive">
+            {form.formState.errors.email.message}
+          </TextUI>
         )}
       </FieldLayout>
 
@@ -59,7 +61,9 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ form }) => {
           )}
         />
         {form.formState.errors.password && (
-          <TextUI className="text-destructive">{form.formState.errors.password.message}</TextUI>
+          <TextUI className="text-sm text-destructive">
+            {form.formState.errors.password.message}
+          </TextUI>
         )}
       </FieldLayout>
     </View>

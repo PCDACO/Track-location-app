@@ -7,13 +7,15 @@ import { Text } from '~/components/nativewindui/Text';
 import { useAuthForm } from '~/hooks/auth/use-auth-form';
 
 const LoginScreen: FunctionComponent = () => {
-  const { form } = useAuthForm();
+  const { form, onSubmit, isLoading } = useAuthForm();
   return (
-    <View>
-      <LoginForm form={form} />
-      <Button>
-        <Text>Đăng nhập</Text>
-      </Button>
+    <View className="flex-1 items-center justify-center bg-white">
+      <View className="gap-10 px-4">
+        <LoginForm form={form} />
+        <Button onPress={onSubmit} disabled={isLoading}>
+          <Text>Đăng nhập</Text>
+        </Button>
+      </View>
     </View>
   );
 };

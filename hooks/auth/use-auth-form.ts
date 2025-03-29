@@ -37,7 +37,9 @@ export const useAuthForm = () => {
                 ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
 
                 setIsAuthenticated(true);
-                router.push('/');
+                router.push({
+                  pathname: '/',
+                });
                 form.reset();
               } else {
                 ToastAndroid.show(
@@ -56,7 +58,7 @@ export const useAuthForm = () => {
         }
       },
       onError: (error: any) => {
-        ToastAndroid.show(error.message, ToastAndroid.LONG);
+        ToastAndroid.show(error, ToastAndroid.BOTTOM);
       },
     });
   });

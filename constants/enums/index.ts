@@ -19,11 +19,12 @@ export enum CarStatus {
 }
 
 export enum CarStatusNumber {
-  Available = 0,
+  Inactive = 0,
   Pending = 1,
-  Rented = 2,
-  Inactive = 3,
+  Available = 2,
+  Rented = 3,
   Maintain = 4,
+  Rejected = 5,
 }
 
 export enum BookingStatusEnum {
