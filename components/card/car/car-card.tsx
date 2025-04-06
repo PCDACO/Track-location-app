@@ -38,7 +38,7 @@ const CarCard: React.FC<CarCardProps> = ({ car, selectedCarId, onSelectCar }) =>
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
             <Text className="text-base font-semibold text-black">
-              {car.manufacturer.name} - {car.modelName}
+              {car.manufacturer.name} - {car.modelName} - {car.licensePlate}
             </Text>
             <Text className="mt-0.5 text-sm text-gray-500">{car.price.toLocaleString()} /ngày</Text>
           </View>

@@ -11,6 +11,7 @@ import Loading from '~/components/plugins/loading';
 import { SearchInput } from '~/components/plugins/search-input';
 import { CarStatusNumber } from '~/constants/enums';
 import { useCarMutation, useCarStaffQuery } from '~/hooks/car/use-car';
+import { storage } from '~/lib/storage';
 import { translate } from '~/lib/translate';
 import { useSearchStore } from '~/store/use-search';
 
@@ -26,6 +27,7 @@ const HomeScreen = () => {
       size: 10,
       status: CarStatusNumber.Pending,
       keyword: searchKeyword,
+      onlyNoGps: true,
     },
   });
   const { carAssignDeviceMutation } = useCarMutation();
@@ -47,8 +49,10 @@ const HomeScreen = () => {
     getPermissions();
   }, []);
 
-  const handleSelectCarCallBack = (id: string) => {
+  const handleSelectCarCallBack = async (id: string) => {
     setSelectedCar(id);
+
+    await storage.setItem('car_id', id);
   };
 
   const onSubmit = () => {

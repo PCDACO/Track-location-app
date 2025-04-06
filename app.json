@@ -16,6 +16,12 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow TRACK-LOCATION-APP to use your location."
+        }
       ]
     ],
     "experiments": {

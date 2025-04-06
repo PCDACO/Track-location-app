@@ -3,6 +3,8 @@ import {
   CarAssignDevicePayload,
   CarParams,
   CarStaffResponseList,
+  CarSwitchDevicePayload,
+  CarSwitchDeviceReponse,
 } from '~/constants/models/car.model';
 
 export const CarService = {
@@ -26,6 +28,27 @@ export const CarService = {
     ): Promise<RootResponse<null>> => {
       try {
         const response = await axiosInstance.post(`/api/cars/${id}/assign-device`, payload);
+        return response.data;
+      } catch (error: any) {
+        throw error.response.data;
+      }
+    },
+
+    tracking_car: async (id: string, payload: Location): Promise<RootResponse<null>> => {
+      try {
+        const response = await axiosInstance.post(`/api/cars/${id}/tracking`, payload);
+        return response.data;
+      } catch (error: any) {
+        throw error.response.data;
+      }
+    },
+
+    switch_device: async (
+      id: string,
+      payload: CarSwitchDevicePayload
+    ): Promise<RootResponse<CarSwitchDeviceReponse>> => {
+      try {
+        const response = await axiosInstance.post(`/api/cars/${id}/switch-gps-device`, payload);
         return response.data;
       } catch (error: any) {
         throw error.response.data;
