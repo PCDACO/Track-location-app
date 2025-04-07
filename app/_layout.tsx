@@ -40,9 +40,10 @@ export default function RootLayout() {
           <ActionSheetProvider>
             <NavThemeProvider value={NAV_THEME[colorScheme]}>
               <Stack screenOptions={SCREEN_OPTIONS}>
-                <Stack.Screen name="index" options={TAB_OPTIONS} />
                 <Stack.Screen name="(tab)" options={TAB_OPTIONS} />
                 <Stack.Screen name="(auth)" options={TAB_OPTIONS} />
+                <Stack.Screen name="(screen)" options={TAB_OPTIONS} />
+                <Stack.Screen name="index" options={TAB_OPTIONS} />
               </Stack>
             </NavThemeProvider>
           </ActionSheetProvider>

@@ -1,41 +1,57 @@
 import * as SignalR from '@microsoft/signalr';
 import * as Location from 'expo-location';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-export const useSendLocation = (carId: string) => {
+export const useLiveLocation = (carId: string | null) => {
+  const connectionRef = useRef<SignalR.HubConnection | null>(null);
+  const locationSub = useRef<Location.LocationSubscription | null>(null);
+
   useEffect(() => {
-    const connection = new SignalR.HubConnectionBuilder()
-      .withUrl(`${API_URL}/location-hub`)
-      .withAutomaticReconnect()
-      .build();
+    if (!carId) return;
 
-    let subscriber: Location.LocationSubscription;
-
-    const startTracking = async () => {
-      await connection.start();
-
+    const init = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') return;
 
-      subscriber = await Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 3000,
-          distanceInterval: 2,
-        },
-        (loc) => {
-          connection.invoke('SendLocation', carId, loc.coords.latitude, loc.coords.longitude);
-        }
-      );
+      const connection = new SignalR.HubConnectionBuilder()
+        .withUrl(`${API_URL}/location-hub`)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await connection.start();
+        console.log('SignalR connection started');
+        connectionRef.current = connection;
+
+        locationSub.current = await Location.watchPositionAsync(
+          { accuracy: Location.Accuracy.High, timeInterval: 5000, distanceInterval: 10 },
+          async (loc) => {
+            try {
+              await connection.invoke(
+                'SendLocationUpdate',
+                carId,
+                loc.coords.latitude,
+                loc.coords.longitude
+              );
+              console.log('Realtime location sent');
+            } catch (err) {
+              console.error('Failed to send location:', err);
+            }
+          }
+        );
+      } catch (err) {
+        console.error('SignalR init failed:', err);
+      }
     };
 
-    startTracking();
+    init();
 
     return () => {
-      subscriber?.remove();
-      connection.stop();
+      locationSub.current?.remove();
+      connectionRef.current?.stop();
+      console.log('Cleaned up live location tracking');
     };
-  }, []);
+  }, [carId]);
 };
