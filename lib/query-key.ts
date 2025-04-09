@@ -9,6 +9,7 @@ export const QueryKey = {
   Car: {
     GetList: 'Get-list',
     AssignDevice: 'Assign-device',
+    SwitchDevice: 'Switch-device',
   },
 
   User: {

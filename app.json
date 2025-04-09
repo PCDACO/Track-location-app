@@ -17,10 +17,17 @@
           "launchMode": "most-recent"
         }
       ],
-       [
+      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow TRACK-LOCATION-APP to use your location."
+        }
+      ],
+       [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow TRACK-LOCATION-APP to access your Face ID biometric data."
         }
       ]
     ],
@@ -38,9 +45,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
+      "networkSecurityConfig": "./network_security_config.xml",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

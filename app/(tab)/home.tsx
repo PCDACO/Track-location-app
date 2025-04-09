@@ -32,7 +32,7 @@ const HomeScreen = () => {
         {carID ? (
           <View className="items-center justify-center gap-4">
             <Text>Thiết bị đã được gắn vào xe</Text>
-            <Button onPress={() => router.push('/(screen)/car')}>
+            <Button onPress={() => router.push(`/(screen)/car?id=${carID}`)}>
               <TextUI>Thay đổi xe đang gắn thiết bị</TextUI>
             </Button>
           </View>

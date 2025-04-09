@@ -1,6 +1,6 @@
 import * as Device from 'expo-device';
 import * as Location from 'expo-location';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, ToastAndroid, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,6 +17,7 @@ import { translate } from '~/lib/translate';
 import { useSearchStore } from '~/store/use-search';
 
 const CarScreen = () => {
+  const { id } = useLocalSearchParams();
   const [location, setLocation] = React.useState<Location.LocationObject>();
   const [selectedCar, setSelectedCar] = React.useState<string>();
 
@@ -32,7 +33,7 @@ const CarScreen = () => {
       onlyHasInspectionSchedule: true,
     },
   });
-  const { carAssignDeviceMutation } = useCarMutation();
+  const { carAssignDeviceMutation, switchDeviceMutation } = useCarMutation();
 
   const carList = data?.value.items || [];
 
@@ -73,27 +74,49 @@ const CarScreen = () => {
       return;
     }
 
-    carAssignDeviceMutation.mutate(
-      {
-        id: selectedCar,
-        payload: {
-          osBuildId: Device.osBuildId,
-          deviceName: Device.deviceName,
-          latitude: location.coords.latitude,
-          longtitude: location.coords.longitude,
+    if (id) {
+      switchDeviceMutation.mutate(
+        {
+          id: id as string,
+          payload: {
+            gpsDeviceId: selectedCar,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
         },
-      },
-      {
-        onSuccess: async (data) => {
-          await storage.setItem('car_id', selectedCar);
-          ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
-          router.push('/(tab)/home');
+        {
+          onSuccess: async (data) => {
+            ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
+            router.push('/(tab)/home');
+          },
+          onError: (error: any) => {
+            ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
+          },
+        }
+      );
+    } else {
+      carAssignDeviceMutation.mutate(
+        {
+          id: selectedCar,
+          payload: {
+            osBuildId: Device.osBuildId,
+            deviceName: Device.deviceName,
+            latitude: location.coords.latitude,
+            longtitude: location.coords.longitude,
+          },
         },
-        onError: (error: any) => {
-          ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
-        },
-      }
-    );
+        {
+          onSuccess: async (data) => {
+            await storage.setItem('car_id', selectedCar);
+            ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
+            router.push('/(tab)/home');
+          },
+          onError: (error: any) => {
+            ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
+          },
+        }
+      );
+    }
   };
 
   return (

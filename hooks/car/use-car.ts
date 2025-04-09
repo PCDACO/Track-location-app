@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { CarAssignDevicePayload, CarParams } from '~/constants/models/car.model';
+import {
+  CarAssignDevicePayload,
+  CarParams,
+  CarSwitchDevicePayload,
+} from '~/constants/models/car.model';
 import { QueryKey } from '~/lib/query-key';
 import { CarService } from '~/services/car.service';
 
@@ -26,7 +30,14 @@ export const useCarMutation = () => {
       await CarService.post.assign_device(id, payload),
   });
 
+  const switchDeviceMutation = useMutation({
+    mutationKey: [QueryKey.Car.SwitchDevice],
+    mutationFn: async ({ id, payload }: { id: string; payload: CarSwitchDevicePayload }) =>
+      await CarService.post.switch_device(id, payload),
+  });
+
   return {
     carAssignDeviceMutation,
+    switchDeviceMutation,
   };
 };
