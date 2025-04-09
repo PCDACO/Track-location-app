@@ -3,7 +3,7 @@ import { CarStatusNumber } from '../enums';
 export interface CarParams extends RootRequest {
   status: CarStatusNumber;
   onlyNoGps: boolean;
-  onlyHasInspectionSchedule: boolean;
+  onlyHasInprogressInspectionSchedule: boolean;
 }
 
 export interface CarSwitchDevicePayload {

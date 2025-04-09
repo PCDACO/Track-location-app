@@ -30,7 +30,7 @@ const CarScreen = () => {
       status: CarStatusNumber.Pending,
       keyword: searchKeyword,
       onlyNoGps: true,
-      onlyHasInspectionSchedule: true,
+      onlyHasInprogressInspectionSchedule: true,
     },
   });
   const { carAssignDeviceMutation, switchDeviceMutation } = useCarMutation();
