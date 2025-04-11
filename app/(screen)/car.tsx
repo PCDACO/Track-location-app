@@ -1,6 +1,6 @@
 import * as Device from 'expo-device';
 import * as Location from 'expo-location';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, ToastAndroid, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,13 +17,12 @@ import { translate } from '~/lib/translate';
 import { useSearchStore } from '~/store/use-search';
 
 const CarScreen = () => {
-  const { id } = useLocalSearchParams();
   const [location, setLocation] = React.useState<Location.LocationObject>();
   const [selectedCar, setSelectedCar] = React.useState<string>();
-
+  const [isRefetch, setIsRefetch] = React.useState<boolean>(false);
   const { searchKeyword } = useSearchStore();
 
-  const { data, isLoading } = useCarStaffQuery({
+  const { data, isLoading, refetch } = useCarStaffQuery({
     params: {
       index: 1,
       size: 1000,
@@ -33,9 +32,18 @@ const CarScreen = () => {
       onlyHasInprogressInspectionSchedule: true,
     },
   });
-  const { carAssignDeviceMutation, switchDeviceMutation } = useCarMutation();
+  const { carAssignDeviceMutation } = useCarMutation();
 
   const carList = data?.value.items || [];
+
+  const handleRefresh = async () => {
+    try {
+      setIsRefetch(true);
+      await refetch();
+    } finally {
+      setIsRefetch(false);
+    }
+  };
 
   React.useEffect(() => {
     const getPermissions = async () => {
@@ -74,49 +82,28 @@ const CarScreen = () => {
       return;
     }
 
-    if (id) {
-      switchDeviceMutation.mutate(
-        {
-          id: id as string,
-          payload: {
-            gpsDeviceId: selectedCar,
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
+    carAssignDeviceMutation.mutate(
+      {
+        id: selectedCar,
+        payload: {
+          osBuildId: Device.osBuildId,
+          deviceName: Device.deviceName,
+          latitude: location.coords.latitude,
+          longtitude: location.coords.longitude,
         },
-        {
-          onSuccess: async (data) => {
-            ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
-            router.push('/(tab)/home');
-          },
-          onError: (error: any) => {
-            ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
-          },
-        }
-      );
-    } else {
-      carAssignDeviceMutation.mutate(
-        {
-          id: selectedCar,
-          payload: {
-            osBuildId: Device.osBuildId,
-            deviceName: Device.deviceName,
-            latitude: location.coords.latitude,
-            longtitude: location.coords.longitude,
-          },
+      },
+      {
+        onSuccess: async (data) => {
+          await storage.setItem('device_id', data.value.id);
+          await storage.setItem('car_id', selectedCar);
+          router.push('/(tab)/home');
+          ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
         },
-        {
-          onSuccess: async (data) => {
-            await storage.setItem('car_id', selectedCar);
-            ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
-            router.push('/(tab)/home');
-          },
-          onError: (error: any) => {
-            ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
-          },
-        }
-      );
-    }
+        onError: (error: any) => {
+          ToastAndroid.show(error.message || translate.car.error.message, ToastAndroid.SHORT);
+        },
+      }
+    );
   };
 
   return (
@@ -134,6 +121,8 @@ const CarScreen = () => {
           <FlatList
             data={carList}
             keyExtractor={(item) => item.id}
+            refreshing={isRefetch}
+            onRefresh={handleRefresh}
             renderItem={({ item }) => (
               <CarCard
                 car={item}

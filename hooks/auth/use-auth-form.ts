@@ -35,6 +35,7 @@ export const useAuthForm = () => {
             .then((response) => {
               if (response?.value.role === Role.Technician) {
                 ToastAndroid.show('Đăng nhập thành công', ToastAndroid.SHORT);
+                setTokens(data.value.accessToken, data.value.refreshToken);
 
                 setIsAuthenticated(true);
                 router.push({

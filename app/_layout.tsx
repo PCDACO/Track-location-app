@@ -9,8 +9,8 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import AuthProvider from '~/components/permission/auth-provider';
 import { useColorScheme, useInitialAndroidBarSync } from '~/lib/useColorScheme';
-import { useAuthStore } from '~/store/auth-store';
 import { NAV_THEME } from '~/theme';
 
 export {
@@ -21,12 +21,6 @@ export {
 export default function RootLayout() {
   useInitialAndroidBarSync();
   const { colorScheme, isDarkColorScheme } = useColorScheme();
-
-  const { validateToken } = useAuthStore();
-
-  React.useEffect(() => {
-    validateToken();
-  }, []);
 
   return (
     <QueryClientProvider client={new QueryClient()}>
@@ -40,10 +34,12 @@ export default function RootLayout() {
           <ActionSheetProvider>
             <NavThemeProvider value={NAV_THEME[colorScheme]}>
               <Stack screenOptions={SCREEN_OPTIONS}>
-                <Stack.Screen name="(tab)" options={TAB_OPTIONS} />
-                <Stack.Screen name="(auth)" options={TAB_OPTIONS} />
-                <Stack.Screen name="(screen)" options={TAB_OPTIONS} />
-                <Stack.Screen name="index" options={TAB_OPTIONS} />
+                <AuthProvider>
+                  <Stack.Screen name="(tab)" options={TAB_OPTIONS} />
+                  <Stack.Screen name="(auth)" options={TAB_OPTIONS} />
+                  <Stack.Screen name="(screen)" options={TAB_OPTIONS} />
+                  <Stack.Screen name="index" options={TAB_OPTIONS} />
+                </AuthProvider>
               </Stack>
             </NavThemeProvider>
           </ActionSheetProvider>
@@ -55,6 +51,7 @@ export default function RootLayout() {
 
 const SCREEN_OPTIONS = {
   animation: 'ios_from_right',
+  headerShown: false,
 } as const;
 
 const TAB_OPTIONS = {

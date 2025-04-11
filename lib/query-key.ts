@@ -12,6 +12,10 @@ export const QueryKey = {
     SwitchDevice: 'Switch-device',
   },
 
+  Device: {
+    Detail: 'Detail',
+  },
+
   User: {
     Current: 'Current',
   },

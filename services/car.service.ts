@@ -25,7 +25,7 @@ export const CarService = {
     assign_device: async (
       id: string,
       payload: CarAssignDevicePayload
-    ): Promise<RootResponse<null>> => {
+    ): Promise<RootResponse<{ id: string }>> => {
       try {
         const response = await axiosInstance.post(`/api/cars/${id}/assign-device`, payload);
         return response.data;
