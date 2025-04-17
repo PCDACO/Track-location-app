@@ -37,12 +37,12 @@ export const useLiveLocation = (carId: string | null) => {
               );
               console.log('Realtime location sent');
             } catch (err) {
-              console.error('Failed to send location:', err);
+              console.log('Failed to send location:', err);
             }
           }
         );
       } catch (err) {
-        console.error('SignalR init failed:', err);
+        console.log('SignalR init failed:', err);
       }
     };
 

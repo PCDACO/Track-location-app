@@ -36,8 +36,14 @@ export const useCarMutation = () => {
       await CarService.post.switch_device(id, payload),
   });
 
+  const unassignDeviceMutation = useMutation({
+    mutationKey: [QueryKey.Car.UnassignDevice],
+    mutationFn: async (id: string) => await CarService.delete.unassign_device(id),
+  });
+
   return {
     carAssignDeviceMutation,
     switchDeviceMutation,
+    unassignDeviceMutation,
   };
 };

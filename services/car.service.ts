@@ -55,4 +55,11 @@ export const CarService = {
       }
     },
   },
+
+  delete: {
+    unassign_device: async (id: string): Promise<RootResponse<null>> => {
+      const response = await axiosInstance.delete(`/api/cars/devices/${id}/unassign-gps-device`);
+      return response.data;
+    },
+  },
 };

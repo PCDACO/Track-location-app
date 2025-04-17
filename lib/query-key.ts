@@ -10,6 +10,7 @@ export const QueryKey = {
     GetList: 'Get-list',
     AssignDevice: 'Assign-device',
     SwitchDevice: 'Switch-device',
+    UnassignDevice: 'Unassign-device',
   },
 
   Device: {

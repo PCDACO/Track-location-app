@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Device from 'expo-device';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
@@ -135,8 +136,9 @@ const CarScreen = () => {
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View className="h-2" />}
             ListEmptyComponent={
-              <View className="h-40 items-center justify-center bg-blue-300">
-                <Text className="text-muted">Không có dữ liệu</Text>
+              <View className="h-40 items-center justify-center gap-4">
+                <MaterialCommunityIcons name="car-settings" size={60} color="gray" />
+                <Text className="text-center text-gray-300">Không có dữ liệu</Text>
               </View>
             }
           />
