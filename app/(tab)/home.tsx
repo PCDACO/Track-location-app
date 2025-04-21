@@ -31,13 +31,13 @@ const HomeScreen = () => {
   };
 
   const handleUnassignDevice = () => {
-    unassignDeviceMutation.mutate(carID as string, {
+    unassignDeviceMutation.mutate(deviceID as string, {
       onSuccess: (response) => {
         ToastAndroid.show(response.message || 'Lỗi ngỡ thiết bị', ToastAndroid.SHORT);
         refetch();
       },
       onError: (error: any) => {
-        ToastAndroid.show(error.message || 'Lỗi ngỡ thiết bị', ToastAndroid.SHORT);
+        ToastAndroid.show(error.response.data.message || 'Lỗi ngỡ thiết bị', ToastAndroid.SHORT);
       },
     });
   };
@@ -88,27 +88,27 @@ const HomeScreen = () => {
 
               <CardBasic>
                 <Text className="text-lg font-bold">Thông tin xe</Text>
-                <Text>Tên xe: {deviceData?.value.carDetail.modelName || 'Không có tên xe'}</Text>
+                <Text>Tên xe: {deviceData?.value.carDetail?.modelName || 'Không có tên xe'}</Text>
                 <Text>
-                  Biển số: {deviceData?.value.carDetail.licensePlate || 'Không có biển số'}
+                  Biển số: {deviceData?.value.carDetail?.licensePlate || 'Không có biển số'}
                 </Text>
-                <Text>Màu sắc: {deviceData?.value.carDetail.color || 'Không có màu sắc'}</Text>
+                <Text>Màu sắc: {deviceData?.value.carDetail?.color || 'Không có màu sắc'}</Text>
                 <Text>
                   Truyền động:{' '}
-                  {deviceData?.value.carDetail.transmissionType || 'Không có truyền động'}
+                  {deviceData?.value.carDetail?.transmissionType || 'Không có truyền động'}
                 </Text>
                 <Text>
-                  Nhiên liệu: {deviceData?.value.carDetail.fuelType || 'Không có nhiên liệu'}
+                  Nhiên liệu: {deviceData?.value.carDetail?.fuelType || 'Không có nhiên liệu'}
                 </Text>
               </CardBasic>
 
               <CardBasic>
                 <Text className="text-lg font-bold">Chủ xe</Text>
-                <Text>Họ tên: {deviceData?.value.carDetail.owner.name || 'Không có họ tên'}</Text>
-                <Text>Email: {deviceData?.value.carDetail.owner.email || 'Không có email'}</Text>
-                <Text>SĐT: {deviceData?.value.carDetail.owner.phone || 'Không có SĐT'}</Text>
+                <Text>Họ tên: {deviceData?.value.carDetail?.owner.name || 'Không có họ tên'}</Text>
+                <Text>Email: {deviceData?.value.carDetail?.owner.email || 'Không có email'}</Text>
+                <Text>SĐT: {deviceData?.value.carDetail?.owner.phone || 'Không có SĐT'}</Text>
                 <Text>
-                  Địa chỉ: {deviceData?.value.carDetail.owner.address || 'Không có địa chỉ'}
+                  Địa chỉ: {deviceData?.value.carDetail?.owner.address || 'Không có địa chỉ'}
                 </Text>
               </CardBasic>
             </View>
@@ -122,10 +122,10 @@ const HomeScreen = () => {
                   <Text className="text-muted">Đã kết nối với thiết bị</Text>
                 </View>
                 <Button onPress={() => router.push('/(screen)/car')}>
-                  <TextUI>Đổi thiết bị gắn xe</TextUI>
+                  <TextUI>Đổi xe gắn thiết bị</TextUI>
                 </Button>
                 <Button onPress={handleUnassignDevice}>
-                  <TextUI>Ngỡ thiết bị</TextUI>
+                  <TextUI>Gỡ bỏ thiết bị</TextUI>
                 </Button>
               </View>
             </View>
@@ -136,7 +136,12 @@ const HomeScreen = () => {
                   <MaterialCommunityIcons name="car-settings" size={60} color="gray" />
                   <Text className="text-muted">Chưa chọn xe để gắn thiết bị</Text>
                 </View>
-                <Button onPress={() => router.push('/(screen)/car')}>
+                <Button
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(screen)/car',
+                    })
+                  }>
                   <TextUI>Vui lòng chọn xe để gắn thiết bị</TextUI>
                 </Button>
               </View>

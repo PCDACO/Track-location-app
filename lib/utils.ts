@@ -79,3 +79,5 @@ export const createFormData = (payload: Record<string, File[]>) => {
   });
   return formData;
 };
+
+export const withNoCache = (url: string) => `${url}?ts=${Date.now()}`;

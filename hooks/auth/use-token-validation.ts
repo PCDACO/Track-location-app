@@ -13,6 +13,8 @@ export const useTokenValidation = () => {
     if (!accessToken || !refreshToken || isValidating) {
       return;
     }
+    console.log('check token');
+    console.log('validateToken', accessToken, refreshToken);
 
     validateTokenMutation.mutate(undefined, {
       onSuccess: () => {
