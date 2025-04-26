@@ -4,12 +4,17 @@ import { useEffect, useRef } from 'react';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-export const useLiveLocation = (carId: string | null) => {
+export const useLiveLocation = (carId: string | null, hasDeviceData: boolean) => {
   const connectionRef = useRef<SignalR.HubConnection | null>(null);
   const locationSub = useRef<Location.LocationSubscription | null>(null);
 
   useEffect(() => {
-    if (!carId) return;
+    if (!carId || !hasDeviceData) {
+      // Clean up if no carId or no device data
+      connectionRef.current?.stop().catch(() => {});
+      locationSub.current?.remove();
+      return;
+    }
 
     const init = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -18,7 +23,13 @@ export const useLiveLocation = (carId: string | null) => {
       const connection = new SignalR.HubConnectionBuilder()
         .withUrl(`${API_URL}/location-hub`)
         .withAutomaticReconnect()
+        .configureLogging(SignalR.LogLevel.None) // Disable all logging
         .build();
+
+      // Override the error handler to prevent error logging
+      connection.onclose(() => {
+        // Silently handle connection close without error logging
+      });
 
       try {
         await connection.start();
@@ -36,13 +47,17 @@ export const useLiveLocation = (carId: string | null) => {
                 loc.coords.longitude
               );
               console.log('Realtime location sent');
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (err) {
-              console.log('Failed to send location:', err);
+              // Stop connection on error
+              await connection.stop();
+              locationSub.current?.remove();
             }
           }
         );
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        console.log('SignalR init failed:', err);
+        // Silently handle initialization errors
       }
     };
 
@@ -50,8 +65,10 @@ export const useLiveLocation = (carId: string | null) => {
 
     return () => {
       locationSub.current?.remove();
-      connectionRef.current?.stop();
+      connectionRef.current?.stop().catch(() => {
+        // Silently handle stop errors
+      });
       console.log('Cleaned up live location tracking');
     };
-  }, [carId]);
+  }, [carId, hasDeviceData]);
 };

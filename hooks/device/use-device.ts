@@ -8,5 +8,6 @@ export const useGPSDeviceQuery = (id: string) => {
     queryKey: [QueryKey.Device.Detail, id],
     queryFn: () => deviceService.get.detail(id),
     enabled: !!id,
+    retry: 1,
   });
 };

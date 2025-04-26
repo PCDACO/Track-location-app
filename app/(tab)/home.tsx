@@ -56,7 +56,7 @@ const HomeScreen = () => {
     getCarID();
   }, []);
 
-  useLiveLocation(carID ?? null);
+  useLiveLocation(carID ?? null, !!deviceData?.value);
 
   if (isLoading) {
     return (

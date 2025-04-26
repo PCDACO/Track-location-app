@@ -13,9 +13,7 @@ export const useTokenValidation = () => {
     if (!accessToken || !refreshToken || isValidating) {
       return;
     }
-    console.log('check token');
-    console.log('validateToken', accessToken, refreshToken);
-
+    setIsValidating(true);
     validateTokenMutation.mutate(undefined, {
       onSuccess: () => {
         setIsValidating(true);
@@ -24,7 +22,7 @@ export const useTokenValidation = () => {
         setIsValidating(false);
       },
     });
-  }, [isValidating, refreshToken, accessToken]);
+  }, [isValidating, refreshToken, accessToken, validateTokenMutation]);
 
   return {
     isValidating,
