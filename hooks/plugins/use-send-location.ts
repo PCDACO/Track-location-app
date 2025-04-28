@@ -11,6 +11,8 @@ export const useLiveLocation = (carId: string | null, hasDeviceData: boolean) =>
   useEffect(() => {
     if (!carId || !hasDeviceData) {
       // Clean up if no carId or no device data
+      console.log('No carId or no device data');
+
       connectionRef.current?.stop().catch(() => {});
       locationSub.current?.remove();
       return;

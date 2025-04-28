@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import * as Device from 'expo-device';
 import * as Location from 'expo-location';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -73,8 +73,6 @@ const CarScreen = () => {
 
   const handleSelectCarCallBack = async (id: string) => {
     setSelectedCar(id);
-
-    await storage.setItem('car_id', id);
   };
 
   const onSubmit = async () => {
@@ -106,7 +104,6 @@ const CarScreen = () => {
       {
         onSuccess: async (data) => {
           await storage.setItem('device_id', data.value.id);
-          await storage.setItem('car_id', selectedCar);
           router.push('/(tab)/home');
           ToastAndroid.show(data.message || translate.car.success.message, ToastAndroid.SHORT);
         },

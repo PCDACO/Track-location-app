@@ -14,7 +14,6 @@ import { useLiveLocation } from '~/hooks/plugins/use-send-location';
 import { storage } from '~/lib/storage';
 
 const HomeScreen = () => {
-  const [carID, setCarID] = React.useState<string>();
   const [deviceID, setDeviceID] = React.useState<string>();
   const [isRefetch, setIsRefetch] = React.useState<boolean>(false);
 
@@ -45,23 +44,22 @@ const HomeScreen = () => {
   React.useEffect(() => {
     const getCarID = async () => {
       const deviceID = await storage.getItem('device_id');
-      const carID = await storage.getItem('car_id');
 
-      if (deviceID && carID) {
+      if (deviceID) {
         setDeviceID(deviceID);
-        setCarID(carID);
       }
     };
 
     getCarID();
   }, []);
 
-  useLiveLocation(carID ?? null, !!deviceData?.value);
+  useLiveLocation(deviceData?.value.carDetail?.id ?? null, !!deviceData?.value);
 
   if (isLoading) {
     return (
       <View className="h-full flex-1 items-center justify-center">
         <Loading />
+        <Text>Đang tải dữ liệu...</Text>
       </View>
     );
   }
@@ -71,7 +69,7 @@ const HomeScreen = () => {
       <ScrollView
         className="h-full flex-1"
         refreshControl={<RefreshControl refreshing={isRefetch} onRefresh={handleRefresh} />}>
-        <View className="h-screen flex-1 items-center justify-center ">
+        <View className="h-screen flex-1 items-center justify-center gap-4">
           {deviceData?.value && (
             <View className="gap-4 p-4">
               <CardBasic>
