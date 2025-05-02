@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Text, TouchableOpacity, View, FlatList } from 'react-native';
 
 import FieldLayout from '~/components/layouts/field-layout';
