@@ -119,9 +119,11 @@ const HomeScreen = () => {
                   <MaterialCommunityIcons name="car-settings" size={60} color="gray" />
                   <Text className="text-muted">Đã kết nối với thiết bị</Text>
                 </View>
-                <Button onPress={() => router.push('/(screen)/car')}>
-                  <TextUI>Đổi xe gắn thiết bị</TextUI>
-                </Button>
+                {!deviceData.value.carDetail && (
+                  <Button onPress={() => router.push('/(screen)/car')}>
+                    <TextUI>Đổi xe gắn thiết bị</TextUI>
+                  </Button>
+                )}
                 <Button onPress={handleUnassignDevice}>
                   <TextUI>Gỡ bỏ thiết bị</TextUI>
                 </Button>
